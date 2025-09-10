@@ -1,6 +1,7 @@
 {
   "name": "danone-mexico",
   "version": "1.0.0",
+  "description": "Chatbot de recomendaciones Danone México con IMC y recetas",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
@@ -8,5 +9,7 @@
   "dependencies": {
     "express": "^5.1.0",
     "cors": "^2.8.5"
-  }
+  },
+  "author": "Ulises Pedraza",
+  "license": "MIT"
 }
