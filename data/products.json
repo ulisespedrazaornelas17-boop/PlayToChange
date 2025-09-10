@@ -1,0 +1,8 @@
+[
+  { "id": 1, "brand": "Danone", "category": "Bebibles", "name": "Yogurt Bebible Danone Fresa y Manzana" },
+  { "id": 2, "brand": "Activia", "category": "Bebibles", "name": "Yogurt Bebible Activia Ciruela 0% Azúcar" },
+  { "id": 3, "brand": "Danone", "category": "Con Fruta", "name": "Yogurt con Trozos de Durazno" },
+  { "id": 4, "brand": "Danone", "category": "Saborizados", "name": "Yogurt de Durazno sin Trozos" },
+  { "id": 5, "brand": "Danone", "category": "Griegos", "name": "Yogurt Griego Sin Azúcar" },
+  { "id": 6, "brand": "Danette", "category": "Postres", "name": "Danette Chocolate" }
+]

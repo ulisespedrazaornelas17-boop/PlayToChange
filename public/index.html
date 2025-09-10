@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Recomendación Danone</title>
+<style>
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #f7f1e3, #d4af7f); /* degradado dorado */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  background-color: #fff9f0;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  max-width: 450px;
+  width: 100%;
+}
+
+h2 {
+  color: #8b6d4b;
+  text-align: center;
+  margin-bottom: 25px;
+  font-weight: bold;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+  color: #5a4632;
+  font-weight: 500;
+}
+
+input, select {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+button {
+  width: 100%;
+  background: linear-gradient(90deg, #b08d57, #ffd700); /* dorado */
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+button:hover {
+  background: linear-gradient(90deg, #ffd700, #b08d57);
+}
+
+#result {
+  margin-top: 25px;
+}
+
+.card {
+  background-color: #fff5e6;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.card h3 {
+  margin: 0 0 10px 0;
+  color: #8b6d4b;
+}
+
+.card p {
+  margin: 0;
+  color: #5a4632;
+  font-weight: 500;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h2>Formulario de Perfil</h2>
+<form id="profileForm">
+  <label>Sexo:
+    <select name="sex" required>
+      <option value="">Selecciona</option>
+      <option value="hombre">Hombre</option>
+      <option value="mujer">Mujer</option>
+    </select>
+  </label>
+  <label>Edad: <input type="number" name="age" required></label>
+  <label>Peso (kg): <input type="number" name="weight" required></label>
+  <label>Altura (m): <input type="number" step="0.01" name="height" required></label>
+  <label>Hobby:
+    <select name="hobby">
+      <option value="">Ninguno</option>
+      <option value="deporte">Deporte</option>
+      <option value="lectura">Lectura</option>
+    </select>
+  </label>
+  <label>Objetivos de salud (coma separados):
+    <input type="text" name="healthGoals" placeholder="proteína,inmunidad">
+  </label>
+  <label>Condiciones (coma separados):
+    <input type="text" name="conditions" placeholder="digestivo,otro">
+  </label>
+  <label><input type="checkbox" name="consent" required> Doy mi consentimiento</label>
+  <button type="submit">Recomendar</button>
+</form>
+
+<div id="result"></div>
+</div>
+
+<script>
+const form = document.getElementById('profileForm');
+const resultDiv = document.getElementById('result');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const formData = new FormData(form);
+  const data = {
+    sex: formData.get('sex'),
+    age: Number(formData.get('age')),
+    weight: Number(formData.get('weight')),
+    height: Number(formData.get('height')),
+    hobby: formData.get('hobby'),
+    healthGoals: formData.get('healthGoals').split(',').map(s => s.trim()).filter(Boolean),
+    conditions: formData.get('conditions').split(',').map(s => s.trim()).filter(Boolean),
+    consent: formData.get('consent') === 'on'
+  };
+
+  const res = await fetch('/recommend', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  const json = await res.json();
+  
+  // Limpiar resultados anteriores
+  resultDiv.innerHTML = '';
+
+  // Mostrar BMI
+  const bmiCard = document.createElement('div');
+  bmiCard.className = 'card';
+  bmiCard.innerHTML = `<h3>Tu IMC:</h3><p>${json.bmi}</p>`;
+  resultDiv.appendChild(bmiCard);
+
+  // Mostrar productos recomendados
+  json.recipes.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `<h3>${item.product.name} (${item.product.brand})</h3>
+                      <p>${item.recipe}</p>`;
+    resultDiv.appendChild(card);
+  });
+});
+</script>
+</body>
+</html>
